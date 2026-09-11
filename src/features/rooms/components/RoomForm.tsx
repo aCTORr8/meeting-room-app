@@ -2,19 +2,15 @@ import { useEffect } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { Button } from '../../../components/ui/Button'
 import { Input } from '../../../components/ui/Input'
-
-export interface RoomFormData {
-  name: string
-  description: string
-}
+import type { RoomFormValues } from '../roomTypes'
 
 interface RoomFormProps {
-  defaultValues?: RoomFormData
-  onSubmit: (data: RoomFormData) => void | Promise<void>
+  defaultValues?: RoomFormValues
+  onSubmit: (values: RoomFormValues) => void | Promise<void>
   onCancel: () => void
 }
 
-const emptyValues: RoomFormData = {
+const emptyValues: RoomFormValues = {
   name: '',
   description: '',
 }
@@ -29,21 +25,21 @@ export function RoomForm({
     handleSubmit,
     register,
     reset,
-  } = useForm<RoomFormData>({ defaultValues })
+  } = useForm<RoomFormValues>({ defaultValues })
 
   useEffect(() => {
     reset(defaultValues)
   }, [defaultValues, reset])
 
-  const submitForm: SubmitHandler<RoomFormData> = async (data) => {
+  const handleSubmitForm: SubmitHandler<RoomFormValues> = async (values) => {
     await onSubmit({
-      description: data.description.trim(),
-      name: data.name.trim(),
+      description: values.description.trim(),
+      name: values.name.trim(),
     })
   }
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit(submitForm)}>
+    <form className="space-y-5" onSubmit={handleSubmit(handleSubmitForm)}>
       <Input
         autoFocus
         error={errors.name?.message}

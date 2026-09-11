@@ -6,8 +6,9 @@ import {
   getDocs,
   updateDoc,
 } from 'firebase/firestore'
-import { db } from '../../config/firebase'
+import { db } from '../../config/firestore'
 import type { Room } from '../../types'
+import type { RoomUpdate } from './roomTypes'
 
 const roomsCollection = collection(db, 'rooms')
 
@@ -22,7 +23,7 @@ export async function createRoom(data: Omit<Room, 'id'>): Promise<Room> {
 
 export async function updateRoom(
   roomId: string,
-  data: Partial<Room>,
+  data: RoomUpdate,
 ): Promise<void> {
   await updateDoc(doc(db, 'rooms', roomId), data)
 }

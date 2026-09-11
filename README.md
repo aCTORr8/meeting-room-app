@@ -1,50 +1,51 @@
-# React + TypeScript + Vite
+# Meeting Room Booking App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React and Firebase application for creating meeting rooms, managing access, and scheduling conflict-free bookings.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Firebase email and password authentication
+- Protected application routes
+- Meeting room creation, editing, and deletion
+- Per-room Admin and User access management
+- Booking creation and cancellation
+- Time conflict validation
+- Responsive Tailwind CSS interface
 
-## Expanding the ESLint configuration
+## Project structure
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```text
+src/
+  components/
+    layout/       Shared application layout
+    ui/           Reusable presentation components
+  config/         External service configuration
+  features/
+    auth/          Authentication context, provider, hook, schemas, and UI
+    bookings/      Booking service, components, and utilities
+    rooms/         Room service, state hook, types, and components
+  pages/           Route-level composition
+  types/           Shared domain models
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Environment variables
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Create a `.env` file with the following Firebase configuration:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```text
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+```
+
+## Commands
+
+```bash
+npm install
+npm run dev
+npm run build
+npm run lint
 ```
