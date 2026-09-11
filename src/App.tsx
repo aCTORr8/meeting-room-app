@@ -1,9 +1,19 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { Dashboard } from './pages/Dashboard'
+import { Login } from './pages/Login'
+import { Register } from './pages/Register'
+
 export default function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-2xl font-bold text-gray-800">
-        hi
-      </h1>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Login />} path="/login" />
+        <Route element={<Register />} path="/register" />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Dashboard />} path="/" />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
 }
