@@ -4,6 +4,7 @@ interface RoomCardProps {
   room: Room
   onEdit: (room: Room) => void
   onDelete: (roomId: string) => void | Promise<void>
+  onManageAccess: (room: Room) => void
   currentUserId?: string
 }
 
@@ -11,6 +12,7 @@ export function RoomCard({
   currentUserId,
   onDelete,
   onEdit,
+  onManageAccess,
   room,
 }: RoomCardProps) {
   return (
@@ -20,6 +22,13 @@ export function RoomCard({
 
       {room.ownerId === currentUserId && (
         <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <button
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            onClick={() => onManageAccess(room)}
+            type="button"
+          >
+            Manage Access
+          </button>
           <button
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
             onClick={() => onEdit(room)}

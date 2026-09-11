@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '../components/ui/Button'
 import { Modal } from '../components/ui/Modal'
 import { useAuth } from '../context/AuthContext'
+import { ManageAccessModal } from '../features/rooms/components/ManageAccessModal'
 import { RoomCard } from '../features/rooms/components/RoomCard'
 import {
   RoomForm,
@@ -13,7 +14,7 @@ import {
   getRooms,
   updateRoom,
 } from '../features/rooms/roomService'
-import type { Room } from '../types'
+import type { Room, RoomRole } from '../types'
 
 export function Dashboard() {
   const { logout, user } = useAuth()
@@ -21,6 +22,8 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingRoom, setEditingRoom] = useState<Room | null>(null)
+  const [isAccessModalOpen, setIsAccessModalOpen] = useState(false)
+  const [roomToManage, setRoomToManage] = useState<Room | null>(null)
   const [error, setError] = useState('')
 
   const loadRooms = useCallback(async () => {
@@ -109,6 +112,33 @@ export function Dashboard() {
     }
   }
 
+  const openAccessModal = (room: Room) => {
+    setRoomToManage(room)
+    setIsAccessModalOpen(true)
+  }
+
+  const closeAccessModal = () => {
+    setIsAccessModalOpen(false)
+    setRoomToManage(null)
+  }
+
+  const handleUpdateAccess = async (
+    roomId: string,
+    newAllowedUsers: RoomRole[],
+  ) => {
+    await updateRoom(roomId, { allowedUsers: newAllowedUsers })
+    setRooms((currentRooms) =>
+      currentRooms.map((room) =>
+        room.id === roomId ? { ...room, allowedUsers: newAllowedUsers } : room,
+      ),
+    )
+    setRoomToManage((currentRoom) =>
+      currentRoom?.id === roomId
+        ? { ...currentRoom, allowedUsers: newAllowedUsers }
+        : currentRoom,
+    )
+  }
+
   return (
     <div className="min-h-screen bg-slate-100">
       <header className="border-b border-slate-200 bg-white shadow-sm">
@@ -183,6 +213,7 @@ export function Dashboard() {
                 key={room.id}
                 onDelete={handleDelete}
                 onEdit={openEditModal}
+                onManageAccess={openAccessModal}
                 room={room}
               />
             ))}
@@ -209,6 +240,13 @@ export function Dashboard() {
           onSubmit={handleSubmit}
         />
       </Modal>
+
+      <ManageAccessModal
+        isOpen={isAccessModalOpen}
+        onClose={closeAccessModal}
+        onUpdateAccess={handleUpdateAccess}
+        room={roomToManage}
+      />
     </div>
   )
 }
